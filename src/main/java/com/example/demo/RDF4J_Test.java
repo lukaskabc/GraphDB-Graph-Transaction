@@ -1,41 +1,17 @@
+package com.example.demo;
+
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager;
 import org.eclipse.rdf4j.repository.manager.RepositoryManager;
+import org.springframework.stereotype.Component;
 
-public class Main {
-    // expects "test" GraphDB repository running on localhost:7200
-    // Parameters:
-    //      RDFS-Plus (Optimized)
-    //      disable owl:sameAs
-    //      32-bit
-    //      Enable context index
-    //      Enable predicate list index
-    static final String REPOSITORY = "test";
-    static final String GRAPH_DB_URL = "http://localhost:7200/";
+import static com.example.demo.DemoApplication.*;
 
-    static final String GRAPH_1 = "http://example.com/graph";
-    static final String GRAPH_2 = "http://example.com/graph2";
-    public static void main(String[] args) {
-        RepositoryManager manager = new RemoteRepositoryManager(GRAPH_DB_URL);
-        manager.init();
-
-        Repository repo = manager.getRepository(REPOSITORY);
-
-        try (RepositoryConnection conn = repo.getConnection()) {
-
-            // Execute the individual steps sequentially
-            createGraph(conn);
-            assertGraph1Exists(conn);
-            moveGraphAndRollback(conn);
-            checkGraphs(conn);
-
-        } finally {
-            manager.shutDown();
-        }
-    }
+@Component
+public class RDF4J_Test {
 
     private static void createGraph(RepositoryConnection conn) {
         System.out.println("Creating graph");
@@ -116,4 +92,37 @@ public class Main {
             throw new RuntimeException("Graph check failed: Graph 1 should exist and Graph 2 should not exist.");
         }
     }
+
+    public void execute(RepositoryConnection conn) {
+
+            // Execute the individual steps sequentially
+            createGraph(conn);
+            assertGraph1Exists(conn);
+            moveGraphAndRollback(conn);
+            checkGraphs(conn);
+
+    }
+
+    public void deleteGraphs() {
+        RepositoryManager manager = new RemoteRepositoryManager(GRAPH_DB_URL);
+        manager.init();
+
+        Repository repo = manager.getRepository(REPOSITORY);
+
+        try (RepositoryConnection conn = repo.getConnection()) {
+            conn.begin();
+            try {
+                ValueFactory factory = conn.getValueFactory();
+                conn.clear(factory.createIRI(GRAPH_1), factory.createIRI(GRAPH_2));
+                conn.commit();
+                System.out.println("Graphs deleted successfully.");
+            } catch (Exception e) {
+                conn.rollback();
+                throw new RuntimeException("Failed to delete graphs", e);
+            }
+        } finally {
+            manager.shutDown();
+        }
+    }
+
 }
