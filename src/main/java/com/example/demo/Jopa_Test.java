@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.github.ledsoft.jopa.spring.transaction.DelegatingEntityManager;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -7,10 +8,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class Jopa_Test {
 
-    private final EntityManager springTransactionEntityManager;
+    private final DelegatingEntityManager springTransactionEntityManager;
     private final EntityManager jopaEntityManager;
 
-    public Jopa_Test(@Qualifier("entityManager") EntityManager springTransactionEntityManager, @Qualifier("jopaEntityManager") EntityManager jopaEntityManager) {
+    public Jopa_Test(@Qualifier("entityManager") DelegatingEntityManager springTransactionEntityManager,
+                     @Qualifier("jopaEntityManager") EntityManager jopaEntityManager) {
         this.springTransactionEntityManager = springTransactionEntityManager;
         this.jopaEntityManager = jopaEntityManager;
     }
