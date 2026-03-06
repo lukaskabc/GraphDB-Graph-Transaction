@@ -47,7 +47,9 @@ public class TestRunner implements SmartInitializingSingleton {
 
         reset();
         System.out.println("### Running JOPA test...");
-        jopa.execute();
+        jopa.testWithJopaManager();
+        reset();
+        jopa.testWithDefaultManager();
         System.out.println("JOPA test completed successfully.");
     }
 
