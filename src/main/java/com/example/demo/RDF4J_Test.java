@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager;
 import org.eclipse.rdf4j.repository.manager.RepositoryManager;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.demo.DemoApplication.*;
 
@@ -93,14 +94,17 @@ public class RDF4J_Test {
         }
     }
 
+    @Transactional
+    public void withJopaTransaction(Runnable action) {
+        action.run();
+    }
+
     public void execute(RepositoryConnection conn) {
-
-            // Execute the individual steps sequentially
-            createGraph(conn);
-            assertGraph1Exists(conn);
-            moveGraphAndRollback(conn);
-            checkGraphs(conn);
-
+        // Execute the individual steps sequentially
+        createGraph(conn);
+        assertGraph1Exists(conn);
+        moveGraphAndRollback(conn);
+        checkGraphs(conn);
     }
 
     public void deleteGraphs() {
@@ -112,8 +116,8 @@ public class RDF4J_Test {
         try (RepositoryConnection conn = repo.getConnection()) {
             conn.begin();
             try {
-                ValueFactory factory = conn.getValueFactory();
-                conn.clear(factory.createIRI(GRAPH_1), factory.createIRI(GRAPH_2));
+                conn.prepareUpdate(QueryLanguage.SPARQL, "DROP GRAPH <" + GRAPH_1 + ">").execute();
+                conn.prepareUpdate(QueryLanguage.SPARQL, "DROP GRAPH <" + GRAPH_2 + ">").execute();
                 conn.commit();
                 System.out.println("Graphs deleted successfully.");
             } catch (Exception e) {

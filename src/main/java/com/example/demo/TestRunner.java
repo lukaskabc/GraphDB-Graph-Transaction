@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import com.github.ledsoft.jopa.spring.transaction.DelegatingEntityManager;
-import cz.cvut.kbss.jopa.model.EntityManager;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager;
@@ -29,19 +28,25 @@ public class TestRunner implements SmartInitializingSingleton {
         this.entityManager = entityManager;
     }
 
+    private void reset() {
+        System.out.println("### Removing existing graphs...");
+        rdf4j.deleteGraphs();
+    }
+
     @Override
     public void afterSingletonsInstantiated() {
-        System.out.println("Removing existing graphs...");
-        rdf4j.deleteGraphs();
+        reset();
 
-
-        System.out.println("Running RDF4J test with a new RDF4J connection...");
+        System.out.println("### Running RDF4J test with a new RDF4J connection...");
         withNewRDF4JConnection(rdf4j::execute);
-        System.out.println("Running RDF4J test with a Jopa connection...");
-        withJopaConnection(rdf4j::execute);
+
+        reset();
+        System.out.println("### Running RDF4J test with a Jopa connection...");
+        rdf4j.withJopaTransaction(() -> withJopaConnection(rdf4j::execute));
         System.out.println("RDF4J test completed successfully.");
 
-        System.out.println("Running JOPA test...");
+        reset();
+        System.out.println("### Running JOPA test...");
         jopa.execute();
         System.out.println("JOPA test completed successfully.");
     }
