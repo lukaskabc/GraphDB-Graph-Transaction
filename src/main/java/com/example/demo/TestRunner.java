@@ -35,15 +35,15 @@ public class TestRunner implements SmartInitializingSingleton {
 
     @Override
     public void afterSingletonsInstantiated() {
-        reset();
+        reset(); // Drop existing graphs in repository
 
-        System.out.println("### Running RDF4J test with a new RDF4J connection...");
-        withNewRDF4JConnection(rdf4j::execute);
-
-        reset();
-        System.out.println("### Running RDF4J test with a Jopa connection...");
-        rdf4j.withJopaTransaction(() -> withJopaConnection(rdf4j::execute));
-        System.out.println("RDF4J test completed successfully.");
+//        System.out.println("### Running RDF4J test with a new RDF4J connection...");
+//        withNewRDF4JConnection(rdf4j::execute);
+//
+//        reset();
+//        System.out.println("### Running RDF4J test with a Jopa connection...");
+//        rdf4j.withJopaTransaction(() -> withJopaConnection(rdf4j::execute));
+//        System.out.println("RDF4J test completed successfully.");
 
         reset();
         System.out.println("### Running JOPA test...");
