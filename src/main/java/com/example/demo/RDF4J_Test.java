@@ -116,6 +116,7 @@ public class RDF4J_Test {
         try (RepositoryConnection conn = repo.getConnection()) {
             conn.begin();
             try {
+                conn.prepareUpdate(QueryLanguage.SPARQL, "DROP GRAPH <http://www.openrdf.org/schema/sesame#nil>").execute();
                 conn.prepareUpdate(QueryLanguage.SPARQL, "DROP GRAPH <" + GRAPH_1 + ">").execute();
                 conn.prepareUpdate(QueryLanguage.SPARQL, "DROP GRAPH <" + GRAPH_2 + ">").execute();
                 conn.commit();

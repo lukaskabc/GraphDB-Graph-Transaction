@@ -13,7 +13,7 @@ import java.util.Optional;
 public class TransactionExecutor {
     private final EntityManager entityManager;
 
-    public TransactionExecutor(@Qualifier("jopaEntityManager") EntityManager entityManager) {
+    public TransactionExecutor(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

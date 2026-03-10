@@ -1,25 +1,17 @@
 package com.example.demo;
 
-import com.github.ledsoft.jopa.spring.transaction.DelegatingEntityManager;
-import cz.cvut.kbss.jopa.model.EntityManager;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Jopa_Test {
+    private final TransactionExecutor transactionExecutor;
 
-    private final DelegatingEntityManager springTransactionEntityManager;
-    private final EntityManager jopaEntityManager;
-
-    public Jopa_Test(@Qualifier("entityManager") DelegatingEntityManager springTransactionEntityManager,
-                     @Qualifier("jopaEntityManager") EntityManager jopaEntityManager) {
-        this.springTransactionEntityManager = springTransactionEntityManager;
-        this.jopaEntityManager = jopaEntityManager;
+    public Jopa_Test( TransactionExecutor transactionExecutor) {
+        this.transactionExecutor = transactionExecutor;
     }
 
-    public void testWithJopaManager() {
+    public void testWithManualTransaction() {
         System.out.println("### Testing with manual transaction control...");
-        final TransactionExecutor transactionExecutor = new TransactionExecutor(jopaEntityManager);
         transactionExecutor.assertNoTransaction();
         transactionExecutor.createGraph();
         transactionExecutor.assertGraphExists();
@@ -30,9 +22,8 @@ public class Jopa_Test {
         transactionExecutor.assertGraphExists();
     }
 
-    public void testWithDefaultManager() {
+    public void testWithSpringTransaction() {
         System.out.println("### Testing with Spring transaction control...");
-        final TransactionExecutor transactionExecutor = new TransactionExecutor(springTransactionEntityManager);
         transactionExecutor.assertNoTransaction();
         transactionExecutor.createGraph();
         transactionExecutor.assertGraphExists();

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.3</version>
+        <version>3.5.10</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
@@ -38,8 +38,8 @@
         <com.github.galigator.openllet.version>2.6.5</com.github.galigator.openllet.version>
         <com.github.ledsoft.jopa-spring-transactions.version>0.4.3</com.github.ledsoft.jopa-spring-transactions.version>
 
-        <org.springframework.version>6.2.15</org.springframework.version>
-        <org.springframework.boot.version>3.5.10</org.springframework.boot.version>
+<!--        <org.springframework.version>6.2.15</org.springframework.version>-->
+<!--        <org.springframework.boot.version>3.5.10</org.springframework.boot.version>-->
     </properties>
 
     <dependencyManagement>

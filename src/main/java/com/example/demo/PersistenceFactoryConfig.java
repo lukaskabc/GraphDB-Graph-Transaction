@@ -6,7 +6,6 @@ import cz.cvut.kbss.jopa.model.JOPAPersistenceProvider;
 import cz.cvut.kbss.ontodriver.rdf4j.Rdf4jDataSource;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -34,7 +33,7 @@ public class PersistenceFactoryConfig {
 
     @Bean
     @Primary
-    public @Nullable EntityManagerFactory entityManagerFactory() {
+    public EntityManagerFactory entityManagerFactory() {
         return factory;
     }
 
