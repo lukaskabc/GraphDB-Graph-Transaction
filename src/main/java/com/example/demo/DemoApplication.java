@@ -4,7 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
-@Import({PersistenceFactoryConfig.class, PersistenceConfig.class})
 @SpringBootApplication
 public class DemoApplication {
 
@@ -18,9 +17,6 @@ public class DemoApplication {
     static final String REPOSITORY = "test";
     static final String GRAPH_DB_URL = "http://localhost:7200/";
     static final String REPOSITORY_URL = GRAPH_DB_URL + "repositories/" + REPOSITORY;
-
-    static final String GRAPH_1 = "http://example.com/graph";
-    static final String GRAPH_2 = "http://example.com/graph2";
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
